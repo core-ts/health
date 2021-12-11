@@ -1,47 +1,45 @@
-import {Request, Response} from 'express';
-
-export enum Status {
-  UP = 'UP',
-  DOWN = 'DOWN'
+// import {Request, Response} from 'express';
+export type HealthStatus = 'UP' | 'DOWN';
+export interface HealthMap {
+  [key: string]: Health;
 }
-
 export interface Health {
-  status: Status;
-  data?: Map<string, any>;
-  details?: Map<string, Health>;
+  status: HealthStatus;
+  data?: AnyMap;
+  details?: HealthMap;
 }
-
-export interface HealthService {
+export interface AnyMap {
+  [key: string]: any;
+}
+export interface HealthChecker {
   name(): string;
-  build(data: Map<string, any>, error: any): Map<string, any>;
-  check(): Promise<Map<string, any>>;
+  build(data: AnyMap, error: any): AnyMap;
+  check(): Promise<AnyMap>;
 }
 
-export async function check(services: HealthService[]): Promise<Health> {
-  const p: Health = {
-    status: Status.UP,
-    details: new Map<string, Health>(),
-  };
-  const total = services.length - 1;
+export async function check(checkers: HealthChecker[]): Promise<Health> {
+  const p: Health = { status: 'UP' };
+  const total = checkers.length - 1;
   let count = 0;
-  for (const service of services) {
-    const sub: Health = {status: Status.UP};
+  p.details = {} as HealthMap;
+  for (const checker of checkers) {
+    const sub: Health = {status: 'UP'};
     try {
-      const r = await service.check();
+      const r = await checker.check();
       if (r && Object.keys(r).length > 0) {
         sub.data = r;
       }
-      p.details.set(service.name(), sub);
+      p.details[checker.name()] = sub;
       if (count >= total) {
         return p;
       } else {
         count++;
       }
     } catch (err) {
-      sub.status = Status.DOWN;
-      p.status = Status.DOWN;
-      sub.data = service.build(new Map<string, any>(), err);
-      p.details.set(service.name(), sub);
+      sub.status = 'DOWN';
+      p.status = 'DOWN';
+      sub.data = checker.build({} as AnyMap, err);
+      p.details[checker.name()] = sub;
       if (count >= total) {
         return p;
       } else {
@@ -49,19 +47,22 @@ export async function check(services: HealthService[]): Promise<Health> {
       }
     }
   }
+  return p;
 }
 
 export class HealthController {
-  constructor(protected healthServices: HealthService[]) {
+  constructor(public checkers: HealthChecker[]) {
     this.check = this.check.bind(this);
   }
-
-  check(req: Request, res: Response) {
-    check(this.healthServices).then(heath => {
-      if (heath.status === Status.UP) {
-        return res.status(200).json(heath);
+  // check(req: Request, res: Response) {
+  check(req: any, res: any) {
+    check(this.checkers).then(heath => {
+      if (heath.status === 'UP') {
+        return res.status(200).json(heath).end();
+      } else {
+        return res.status(500).json(heath).end();
       }
-      return res.status(500).json(heath);
     });
   }
 }
+export const HealthHandler = HealthController;

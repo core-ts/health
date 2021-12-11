@@ -1,6 +1,6 @@
 {
-  "name": "health-plus",
-  "version": "1.2.1",
+  "name": "health-core",
+  "version": "0.1.0",
   "description": "Health Check",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
@@ -10,12 +10,10 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
-    "express": "^4.17.1",
     "tslint": "5.10.0",
     "typescript": "^3.3.3333"
   },
   "peerDependencies": {
-    "@types/express": "^4.17.6",
     "express": "^4.17.1"
   },
   "publishConfig": {
@@ -23,10 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com/common-ts/health"
+    "url": "git@github.com/core-ts/health"
   },
   "keywords": [
     "health",
-    "healthcheck"
+    "healthcheck",
+    "health-plus",
+    "health-core"
   ]
 }
