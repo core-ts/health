@@ -1,4 +1,5 @@
-// import {Request, Response} from 'express';
+import * as http from 'http';
+
 export type HealthStatus = 'UP' | 'DOWN';
 export interface HealthMap {
   [key: string]: Health;
@@ -51,16 +52,19 @@ export async function check(checkers: HealthChecker[]): Promise<Health> {
 }
 
 export class HealthController {
-  constructor(public checkers: HealthChecker[]) {
+  constructor(protected checkers: HealthChecker[]) {
     this.check = this.check.bind(this);
   }
-  // check(req: Request, res: Response) {
-  check(req: any, res: any) {
+  check(req: http.IncomingMessage, res: http.ServerResponse) {
     check(this.checkers).then(heath => {
       if (heath.status === 'UP') {
-        return res.status(200).json(heath).end();
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.write(JSON.stringify(heath));
+        res.end();
       } else {
-        return res.status(500).json(heath).end();
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.write(JSON.stringify(heath));
+        res.end();
       }
     });
   }

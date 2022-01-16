@@ -1,6 +1,6 @@
 {
-  "name": "health-core",
-  "version": "0.1.0",
+  "name": "health-service",
+  "version": "0.1.2",
   "description": "Health Check",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
@@ -27,6 +27,7 @@
     "health",
     "healthcheck",
     "health-plus",
-    "health-core"
+    "health-core",
+    "health-service"
   ]
 }
