@@ -122,10 +122,10 @@ DatabaseChecker   RedisChecker   RabbitMQChecker
       │               │                │
       └───────────────┼────────────────┘
                       ▼
-             Combined Health Result
+            Combined Health Result
                       │
                       ▼
-               JSON HTTP Response
+              JSON HTTP Response
 ```
 
 ---
@@ -340,7 +340,7 @@ Unlike framework-specific solutions, it has no dependency on Express, Fastify, N
 - Type-safe
 - Zero runtime dependencies
 - Production friendly
-
+ 
 ---
 
 # Related Projects
