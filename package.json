@@ -1,6 +1,6 @@
 {
   "name": "health-service",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Health Check",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
@@ -9,7 +9,6 @@
     "clean:lib": "rimraf lib"
   },
   "devDependencies": {
-    "@types/express": "^4.17.6",
     "tslint": "5.10.0",
     "typescript": "^3.3.3333"
   },
@@ -26,6 +25,7 @@
   "keywords": [
     "health",
     "healthcheck",
+    "health-check",
     "health-plus",
     "health-core",
     "health-service"
