@@ -19,36 +19,34 @@ export interface HealthChecker {
 }
 
 export async function check(checkers: HealthChecker[]): Promise<Health> {
-  const p: Health = { status: "UP" }
-  const total = checkers.length - 1
-  let count = 0
-  p.details = {} as HealthMap
-  for (const checker of checkers) {
-    const sub: Health = { status: "UP" }
-    try {
-      const r = await checker.check()
-      if (r && Object.keys(r).length > 0) {
-        sub.data = r
+  const health: Health = {
+    status: "UP",
+    details: {}
+  };
+
+  await Promise.all(
+    checkers.map(async (checker) => {
+      const sub: Health = {
+        status: "UP"
+      };
+
+      try {
+        const data = await checker.check();
+
+        if (data && Object.keys(data).length > 0) {
+          sub.data = data;
+        }
+      } catch (err) {
+        sub.status = "DOWN";
+        health.status = "DOWN";
+        sub.data = checker.build({}, err);
       }
-      p.details[checker.name()] = sub
-      if (count >= total) {
-        return p
-      } else {
-        count++
-      }
-    } catch (err) {
-      sub.status = "DOWN"
-      p.status = "DOWN"
-      sub.data = checker.build({} as AnyMap, err)
-      p.details[checker.name()] = sub
-      if (count >= total) {
-        return p
-      } else {
-        count++
-      }
-    }
-  }
-  return p
+
+      health.details![checker.name()] = sub;
+    })
+  );
+
+  return health;
 }
 
 export class HealthController {

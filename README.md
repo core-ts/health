@@ -6,12 +6,12 @@ A lightweight, framework-independent health check library for Node.js.
 
 ## Features
 
-- Lightweight with zero runtime dependencies
-- Framework independent
 - Simple `HealthChecker` interface
 - Aggregate multiple health checks
 - Hierarchical health status
 - Custom error serialization
+- Lightweight with zero runtime dependencies
+- Framework independent
 - Native HTTP controller
 - Easy to extend
 - TypeScript support
@@ -118,7 +118,7 @@ returns
                       │
       ┌───────────────┼────────────────┐
       ▼               ▼                ▼
-DatabaseChecker   RedisChecker   RabbitMQChecker
+MySQLChecker    RedisChecker    RabbitMQChecker
       │               │                │
       └───────────────┼────────────────┘
                       ▼
