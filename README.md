@@ -24,14 +24,7 @@ A lightweight, framework-independent health check library for Node.js.
 npm install health-service
 ```
 
-or
-
-```bash
-yarn add health-service
-```
-
 ---
-
 
 ## Examples:
 - [rabbitmq-sample](https://github.com/typescript-tutorial/rabbitmq-sample): An example to consume message from rabbitmq.
@@ -50,14 +43,13 @@ yarn add health-service
 import { createServer } from "http";
 import { HealthChecker, HealthController, AnyMap } from "health-service";
 
-class DatabaseChecker implements HealthChecker {
+class MySQLChecker implements HealthChecker {
   name(): string {
-    return "database";
+    return "sql";
   }
 
   async check(): Promise<AnyMap> {
     // verify database connection
-
     return {
       version: "MySQL 8.0",
       latency: 12
@@ -72,7 +64,7 @@ class DatabaseChecker implements HealthChecker {
 }
 
 const controller = new HealthController([
-  new DatabaseChecker()
+  new MySQLChecker()
 ]);
 
 const server = createServer(controller.check);
@@ -118,7 +110,7 @@ returns
                       │
       ┌───────────────┼────────────────┐
       ▼               ▼                ▼
-MySQLChecker    RedisChecker    RabbitMQChecker
+MySQLChecker     RedisChecker     KafkaChecker
       │               │                │
       └───────────────┼────────────────┘
                       ▼
@@ -148,7 +140,7 @@ Example
 {
   "status": "DOWN",
   "details": {
-    "database": {
+    "sql": {
       "status": "UP"
     },
     "redis": {
@@ -181,7 +173,7 @@ Returns the checker name.
 
 ```typescript
 name() {
-    return "database";
+    return "sql";
 }
 ```
 
@@ -206,7 +198,7 @@ Throw an exception when the component is unavailable.
 
 ```typescript
 async check() {
-    throw new Error("Database unavailable");
+    throw new Error("SQL unavailable");
 }
 ```
 
@@ -234,9 +226,9 @@ Health checks are automatically aggregated.
 
 ```typescript
 const controller = new HealthController([
-    new DatabaseChecker(),
+    new MySQLChecker(),
     new RedisChecker(),
-    new RabbitMQChecker()
+    new KafkaChecker()
 ]);
 ```
 
@@ -246,13 +238,13 @@ Result
 {
   "status": "UP",
   "details": {
-    "database": {
+    "sql": {
       "status": "UP"
     },
     "redis": {
       "status": "UP"
     },
-    "rabbitmq": {
+    "kafka": {
       "status": "UP"
     }
   }
