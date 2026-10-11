@@ -41,7 +41,11 @@ npm install health-service
 
 ```typescript
 import { createServer } from "http";
-import { HealthChecker, HealthController, AnyMap } from "health-service";
+import { HealthChecker, HealthController } from "health-service";
+
+export interface AnyMap {
+  [key: string]: any
+}
 
 class MySQLChecker implements HealthChecker {
   name(): string {
@@ -127,7 +131,15 @@ MySQLChecker     RedisChecker     KafkaChecker
 The library returns a hierarchical health object.
 
 ```typescript
-interface Health {
+export interface AnyMap {
+  [key: string]: any
+}
+
+export interface HealthMap {
+  [key: string]: Health
+}
+
+export interface Health {
     status: "UP" | "DOWN";
     data?: AnyMap;
     details?: HealthMap;
@@ -160,6 +172,10 @@ Example
 Every component implements the `HealthChecker` interface.
 
 ```typescript
+export interface AnyMap {
+  [key: string]: any
+}
+
 export interface HealthChecker {
     name(): string;
     check(): Promise<AnyMap>;
