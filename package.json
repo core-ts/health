@@ -1,6 +1,6 @@
 {
   "name": "health-service",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "Health Check",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
